@@ -54,7 +54,14 @@ func PressEnterToContinue() {
 }
 
 // AskYesNo asks a yes/no question and returns true for yes, false for no
+// In test mode, it automatically returns true
 func AskYesNo(question string) bool {
+        // In test mode, always say yes
+        if TestMode {
+                fmt.Printf("%s (y/n): Test mode - Automatically answering 'y'\n", question)
+                return true
+        }
+        
         reader := bufio.NewReader(os.Stdin)
         
         for {
@@ -79,10 +86,17 @@ func AskYesNo(question string) bool {
 }
 
 // AskQuestion asks a multiple-choice question and returns the selected answer
+// In test mode, it automatically selects the correct answer (first option)
 func AskQuestion(question string, options []string) string {
         fmt.Println(question)
         for i, option := range options {
                 fmt.Printf("%d. %s\n", i+1, option)
+        }
+        
+        // In test mode, always select the correct answer (first option)
+        if TestMode {
+                fmt.Printf("\nTest mode: Automatically selecting option 1\n")
+                return options[0]
         }
         
         reader := bufio.NewReader(os.Stdin)
@@ -108,7 +122,20 @@ func AskQuestion(question string, options []string) string {
 }
 
 // AskForInput prompts for text input with an optional default value
+// In test mode, it automatically returns the default value
 func AskForInput(prompt string, defaultValue string) string {
+        // In test mode, always use the default or a standard value
+        if TestMode {
+                if defaultValue != "" {
+                        fmt.Printf("%s [%s]: Test mode - Using default value\n", prompt, defaultValue)
+                        return defaultValue
+                } else {
+                        testValue := "test_value"
+                        fmt.Printf("%s: Test mode - Using '%s'\n", prompt, testValue)
+                        return testValue
+                }
+        }
+        
         reader := bufio.NewReader(os.Stdin)
         
         if defaultValue != "" {

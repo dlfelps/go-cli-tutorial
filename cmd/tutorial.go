@@ -4,6 +4,7 @@ import (
         "fmt"
         "gocli-teacher/progress"
         "gocli-teacher/tutorials"
+        "gocli-teacher/utils"
         "os"
 
         "github.com/spf13/cobra"
@@ -36,6 +37,12 @@ Available topics:
                 }
 
                 topic := args[0]
+                
+                // Set test mode if flag is provided
+                utils.TestMode = testMode
+                if testMode {
+                    fmt.Println("Running in non-interactive test mode")
+                }
                 
                 // Map topics to their correct internal names
                 topicMap := map[string]string{

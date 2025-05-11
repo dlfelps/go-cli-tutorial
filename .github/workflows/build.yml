@@ -30,13 +30,6 @@ jobs:
     name: Build
     needs: test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        goos: [linux, windows, darwin]
-        goarch: [amd64, arm64]
-        exclude:
-          - goos: windows
-            goarch: arm64
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -48,19 +41,15 @@ jobs:
 
       - name: Build binary
         env:
-          GOOS: ${{ matrix.goos }}
-          GOARCH: ${{ matrix.goarch }}
+          GOOS: linux
+          GOARCH: amd64
         run: |
-          output_name="gocli-teacher"
-          if [ "${{ matrix.goos }}" = "windows" ]; then
-            output_name="gocli-teacher.exe"
-          fi
-          go build -v -o build/$output_name
+          go build -v -o build/gocli-teacher
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
-          name: gocli-teacher-${{ matrix.goos }}-${{ matrix.goarch }}
+          name: gocli-teacher-linux-amd64
           path: build/
 
   release:
@@ -72,33 +61,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         
-      - name: Download all artifacts
+      - name: Download artifact
         uses: actions/download-artifact@v3
         with:
-          path: artifacts
+          name: gocli-teacher-linux-amd64
+          path: artifacts/gocli-teacher-linux-amd64
 
-      - name: Prepare artifacts for release
+      - name: Prepare artifact for release
         run: |
           mkdir -p release
-          cp -r artifacts/* release/
-          cd release
-          find . -type d -name "gocli-teacher-*" | while read dir; do
-            os_arch=${dir#./gocli-teacher-}
-            os=$(echo $os_arch | cut -d '-' -f 1)
-            arch=$(echo $os_arch | cut -d '-' -f 2)
-            if [ "$os" = "windows" ]; then
-              zip -r "gocli-teacher-${os}-${arch}.zip" "$dir"
-            else
-              tar -czf "gocli-teacher-${os}-${arch}.tar.gz" "$dir"
-            fi
-          done
+          cd artifacts
+          tar -czf "../release/gocli-teacher-linux-amd64.tar.gz" gocli-teacher-linux-amd64
 
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            release/*.zip
             release/*.tar.gz
           draft: false
           prerelease: false
