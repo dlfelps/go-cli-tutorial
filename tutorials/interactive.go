@@ -472,4 +472,7 @@ table.Render()`)
         fmt.Println("2. Learn about CLI best practices: gocli-teacher tutorial best-practices")
         
         utils.PressEnterToContinue()
+        
+        // Consider the tutorial completed if the user got at least 2 out of 3 questions correct
+        return correct >= 2
 }

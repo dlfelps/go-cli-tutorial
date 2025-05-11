@@ -100,5 +100,5 @@ Available exercises:
 }
 
 func init() {
-        rootCmd.AddCommand(exerciseCmd)
+        RootCmd.AddCommand(exerciseCmd)
 }

@@ -9,6 +9,9 @@ import (
         "github.com/spf13/cobra"
 )
 
+// testMode flag for non-interactive testing
+var testMode bool
+
 // tutorialCmd represents the tutorial command
 var tutorialCmd = &cobra.Command{
         Use:   "tutorial [topic]",
@@ -96,5 +99,8 @@ Available topics:
 }
 
 func init() {
-        rootCmd.AddCommand(tutorialCmd)
+        RootCmd.AddCommand(tutorialCmd)
+        
+        // Add flags
+        tutorialCmd.Flags().BoolVarP(&testMode, "test", "t", false, "Run in non-interactive test mode")
 }

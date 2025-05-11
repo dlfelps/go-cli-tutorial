@@ -91,10 +91,15 @@ func main() {
 `
 
 // RunSimpleCliExercise runs the simple CLI exercise
-func RunSimpleCliExercise() {
+func RunSimpleCliExercise() (bool, int) {
         utils.ClearScreen()
         title := "Exercise: Building a Simple CLI"
         utils.PrintTitle(title)
+        
+        // Variables to track progress
+        var completed int
+        totalTasks := 4 // Total number of tasks in this exercise
+        requiredTasks := 3 // Minimum tasks required to consider exercise completed
 
         fmt.Println("Welcome to your first CLI exercise!")
         time.Sleep(1 * time.Second)
@@ -137,7 +142,7 @@ func RunSimpleCliExercise() {
         err := os.MkdirAll(exerciseDir, 0755)
         if err != nil {
                 fmt.Printf("Error creating directory: %v\n", err)
-                return
+                return false, 0
         }
         
         // Create the exercise file
@@ -145,7 +150,7 @@ func RunSimpleCliExercise() {
         err = os.WriteFile(exerciseFile, []byte(simpleCliTemplate), 0644)
         if err != nil {
                 fmt.Printf("Error creating file: %v\n", err)
-                return
+                return false, 0
         }
         
         fmt.Printf("\nI've created a template file at %s\n", exerciseFile)
@@ -237,4 +242,12 @@ func RunSimpleCliExercise() {
         fmt.Println("3. Try the 'flag-exercise' to learn about command-line flags")
         
         utils.PressEnterToContinue()
+        
+        // Calculate score based on completed tasks (max 100)
+        score := completed * (100 / totalTasks)
+        if score > 100 {
+            score = 100
+        }
+        
+        return completed >= requiredTasks, score
 }

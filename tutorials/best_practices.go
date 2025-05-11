@@ -7,7 +7,7 @@ import (
 )
 
 // RunBestPracticesTutorial runs the best practices tutorial
-func RunBestPracticesTutorial() {
+func RunBestPracticesTutorial() bool {
         utils.ClearScreen()
         title := "CLI Design Best Practices"
         utils.PrintTitle(title)
@@ -324,4 +324,7 @@ rootCmd.Flags().IntVarP(&retries, "retries", "r", 3, "retries")`)
         fmt.Println("3. Build your own CLI tool using what you've learned")
         
         utils.PressEnterToContinue()
+        
+        // Consider the tutorial completed if the user got at least 2 out of 3 questions correct
+        return correct >= 2
 }
