@@ -1,0 +1,40 @@
+modules = ["golang", "go-1.18"]
+
+[nix]
+channel = "stable-24_05"
+packages = ["go", "go_1_21"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "GoCliTeacher"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "gocli-teacher"
+
+[[workflows.workflow]]
+name = "GoCliTeacher"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "go run main.go"
+
+[[workflows.workflow]]
+name = "gocli-teacher"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "go run main.go"
+
+[deployment]
+run = ["sh", "-c", "go run main.go"]
